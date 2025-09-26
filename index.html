@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>McFatty's Food Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#fdfaf3" id="theme-color">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="preload" href="Logo.png" as="image">
+
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/tiles.css">
+
+</head>
+<body>
+  <div id="scrim" class="scrim" tabindex="-1" aria-hidden="true"></div>
+  <aside id="sidebar" class="sidebar" aria-hidden="true" aria-labelledby="menu-title" role="dialog">
+    <div class="sb-head">
+      <h3 id="menu-title" class="sb-title" data-i18n="menuTitle">Menu</h3>
+      <button id="menu-close" class="icon-btn" aria-label="Close menu">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7L12 12l6.3 6.3-1.3 1.3L10.7 13.3 4.4 19.6 3.1 18.3 9.4 12 3.1 5.7 4.4 4.4l6.3 6.3 6.3-6.3z"/></svg>
+      </button>
+    </div>
+    <div>
+      <div class="sb-section-title" data-i18n="corePractices">Core Practices</div>
+      <ul class="sb-list">
+        <li><button class="sb-item-btn" data-action="newEntry"><svg class="sb-item-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19 11H13V5h-2v6H5v2h6v6h2v-6h6z"/></svg><span data-i18n="newJournal">New Journal Entry</span></button></li>
+        <li><button class="sb-item-btn" data-action="manifesto"><svg class="sb-item-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M20 6v14H6v2h14c1.1 0 2-.9 2-2V6h-2zm-4-4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h6v2zm-6 4h4v-2H9v2zm8-8H9V5h8v2z"/></svg><span data-i18n="manifesto">McFatty's Manifesto</span></button></li>
+        <li><button class="sb-item-btn" data-action="history"><svg class="sb-item-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 0 1 7-7 7 7 0 0 1 7 7 7 7 0 0 1-7 7v2a9 9 0 0 0 9-9 9 9 0 0 0-9-9zm-1 5v5l4.25 2.52.75-1.23-3.5-2.07V8z"></path></svg><span data-i18n="history">History</span></button></li>
+      </ul>
+      <div class="sb-section-title" data-i18n="settings">Application Settings</div>
+      <ul class="sb-list">
+        <li><button class="sb-item-btn" data-action="account"><svg class="sb-item-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4 0-8 2-8 6v2h16v-2c0-4-4-6-8-6z"/></svg><span data-i18n="account">Account</span></button></li>
+        <li><button class="sb-item-btn" data-action="logout" id="logout-btn"><svg class="sb-item-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M16 17v-3H9v-2h7V9l4 4-4 4zm-5-3H4V5h7V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h7v-2z"></path></svg><span data-i18n="logout">Log Out</span></button></li>
+      </ul>
+    </div>
+  </aside>
+
+  <div id="install-banner" class="install-banner" role="status" aria-live="polite"></div>
+
+  <div class="container stack-20">
+    <div class="utility-bar" role="region" aria-label="App controls">
+      <div class="utility-row">
+        <div id="lang-toggle" class="lang-toggle" role="button" tabindex="0" aria-label="Toggle language EN/DE">
+          <span>EN</span><div id="switch" class="switch" aria-hidden="true"></div><span>DE</span>
+        </div>
+        <div class="header-actions">
+          <div id="auth-actions" class="auth-actions">
+            <button id="login-btn" class="btn btn-secondary" type="button" data-i18n="loginBtn">Login</button>
+            <button id="signup-btn" class="btn btn-primary" type="button" data-i18n="signupBtn">Sign Up</button>
+          </div>
+          <div id="user-info" class="user-info">
+            <span id="user-name"></span>
+            <button id="logout-btn-main" class="btn btn-secondary" type="button" data-i18n="logoutBtn">Logout</button>
+          </div>
+          <button id="theme-toggle" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+            <span id="theme-toggle-icon" aria-hidden="true">🌙</span>
+            <span class="sr-only" id="theme-toggle-label">Enable dark mode</span>
+          </button>
+          <button id="pwa-install" class="btn btn-secondary" type="button" aria-label="Install app" data-i18n="installBtn">Install</button>
+          <button id="menu-open" class="icon-btn" aria-label="Open menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="landing-page">
+      <section id="auth-section" class="section stack-16" style="display: none;">
+        <h2 id="auth-title" data-i18n="loginTitle">Login / Sign Up</h2>
+        <div class="stack-16">
+          <div class="controls">
+            <div class="grow">
+              <label for="auth-email" class="label" data-i18n="emailLabel">Email</label>
+              <input id="auth-email" class="input" type="email" autocomplete="email">
+            </div>
+          </div>
+          <div class="controls">
+            <div class="grow">
+              <label for="auth-password" class="label" data-i18n="passwordLabel">Password</label>
+              <input id="auth-password" class="input" type="password" autocomplete="current-password">
+            </div>
+          </div>
+          <div id="signup-fields" style="display: none;" class="stack-16">
+            <div class="controls">
+              <div class="grow">
+                <label for="auth-username" class="label" data-i18n="usernameLabel">Username</label>
+                <input id="auth-username" class="input" type="text" autocomplete="username">
+              </div>
+            </div>
+            <div class="controls">
+              <div class="grow">
+                <label for="auth-re-password" class="label" data-i18n="rePasswordLabel">Re-type Password</label>
+                <input id="auth-re-password" class="input" type="password" autocomplete="new-password">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="controls" style="margin-top: 16px;">
+          <button id="auth-submit" class="btn btn-primary" type="button"></button>
+          <button id="auth-toggle" class="btn btn-secondary" type="button"></button>
+        </div>
+        <div style="text-align:center; margin-top:16px; color:var(--text-1)">OR</div>
+        <button id="google-signin" class="btn btn-google" type="button">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.20455c0-.63864-.05727-1.25182-.16364-1.84091H9v3.48182h4.84364c-.20818 1.125-.84273 2.07818-1.77727 2.72182v2.25818h2.90818c1.70182-1.56636 2.68636-3.87409 2.68636-6.62182z"/><path fill="#34A853" d="M9 18c2.43 0 4.46727-.80545 5.95636-2.18182l-2.90818-2.25818c-.80545.54273-1.84091.86182-3.04818.86182-2.34545 0-4.32818-1.58364-5.03545-3.71091H.957273v2.33182C2.43818 16.1573 5.48182 18 9 18z"/><path fill="#FBBC05" d="M3.96455 10.71c-.18-.54273-.28364-1.11636-.28364-1.71s.10364-1.16727.28364-1.71V4.95818H.957273C.347727 6.17364 0 7.54773 0 9c0 1.45227.347727 2.82636.957273 4.04182L3.96455 10.71z"/><path fill="#EA4335" d="M9 3.57818c1.32182 0 2.50727.45545 3.44 1.34818l2.58182-2.58182C13.4636.891818 11.4259 0 9 0 5.48182 0 2.43818 1.84273.957273 4.95818L3.96455 7.29C4.67182 5.16364 6.65455 3.57818 9 3.57818z"/></svg>
+          <span data-i18n="googleSignin">Sign in with Google</span>
+        </button>
+      </section>
+
+      <section id="about-section" class="section">
+        <h2 data-i18n="manifestoTitle">McFatty's Manifesto</h2>
+        <p class="manifesto-paragraph" data-i18n="manifestoP1">McFatty’s Food Tracker is not about calories, restrictions, or guilt. If you want chips, eat them. No shame, no punishment. Just write it down. Recording without judgment is the act that matters.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP2">This app is free. No subscriptions, no upsells, no lifestyle packages. We reject the idea that food and health should be sold back to us. Eating should not be a business model.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP3">Instead, McFatty’s helps you pause, check in with your body, and notice your habits. Consciously or subconsciously, the simple act of logging allows you to see patterns and slowly shift your relationship with food. Change should not be a race. It should be slow, gentle, and rooted in respect for your choices.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP4">We are against cycles of guilt, shame, and impossible promises. We will not celebrate consumerism dressed up as self-care. We believe the radical choice is to slow down, listen to yourself, and eat on your own terms.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP5">The app will always be free to use. There is a donation button for those who want to support, because while the world should be free, it isn’t. But McFatty’s will never profit from your guilt.</p>
+        <button id="donate-button" class="btn btn-primary" type="button" data-i18n="donateBtn">Donate</button>
+      </section>
+    </div>
+
+    <div id="dashboard-controls" class="dashboard-controls" hidden>
+      <button id="reorder-toggle" class="btn btn-secondary dashboard-reorder-btn" type="button" aria-pressed="false" aria-controls="app-content">Organize tiles</button>
+      <p id="reorder-hint" class="reorder-hint" data-i18n="reorderHint" hidden aria-live="polite">Drag tiles to reorder. Tap Done when you’re finished.</p>
+    </div>
+
+    <div id="app-content" class="dashboard-grid" style="display: none;"></div>
+
+    <footer class="footer">
+      <span data-i18n="footerText">Designed and created by Burrow · 2025</span>
+      <div class="footer-links">
+        <a href="#" id="impressum-link" data-i18n="impressum">Legal Notice</a>
+        <a href="#" id="privacy-link" data-i18n="privacyPolicy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-desc">
+    <div class="modal">
+      <h3 id="confirm-title" data-i18n="confirmTitle">Are you sure?</h3>
+      <p id="confirm-desc"></p>
+      <div class="modal-actions">
+        <button id="cancel-action" class="btn btn-secondary" data-i18n="cancelBtn">Cancel</button>
+        <button id="confirm-action" class="btn btn-danger" data-i18n="confirmClearBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-title">
+    <div class="modal">
+      <h3 id="account-title" data-i18n="accountModalTitle">Edit Account</h3>
+      <div class="stack-16" style="text-align: left;">
+        <label for="account-name" class="label" data-i18n="nameLabel">Name</label>
+        <input id="account-name" class="input" type="text" placeholder="e.g., Mike">
+        <label for="account-email" class="label" data-i18n="emailLabel">Email</label>
+        <input id="account-email" class="input" type="email" disabled>
+      </div>
+      <div class="modal-actions">
+        <button id="delete-account" class="btn btn-danger" data-i18n="deleteAccountBtn">Delete Account</button>
+        <button id="cancel-account" class="btn btn-secondary" data-i18n="cancelBtn">Cancel</button>
+        <button id="save-account" class="btn btn-primary" data-i18n="saveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="history-modal" role="dialog" aria-modal="true" aria-labelledby="history-title">
+    <div class="modal">
+      <h3 id="history-title" data-i18n="historyTitle">Log History</h3>
+      <div id="history-content" class="modal-content" style="text-align: left;"></div>
+      <div class="modal-actions">
+        <button id="close-history" class="btn btn-primary" data-i18n="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="manifesto-modal" role="dialog" aria-modal="true" aria-labelledby="manifesto-title">
+    <div class="modal">
+      <img src="manifesto.png" alt="McFatty's Manifesto" class="modal-image">
+      <h3 id="manifesto-title" data-i18n="manifestoTitle">McFatty's Manifesto</h3>
+      <div class="modal-content">
+        <p class="manifesto-paragraph" data-i18n="manifestoP1">McFatty’s Food Tracker is not about calories, restrictions, or guilt. If you want chips, eat them. No shame, no punishment. Just write it down. Recording without judgment is the act that matters.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP2">This app is free. No subscriptions, no upsells, no lifestyle packages. We reject the idea that food and health should be sold back to us. Eating should not be a business model.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP3">Instead, McFatty’s helps you pause, check in with your body, and notice your habits. Consciously or subconsciously, the simple act of logging allows you to see patterns and slowly shift your relationship with food. Change should not be a race. It should be slow, gentle, and rooted in respect for your choices.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP4">We are against cycles of guilt, shame, and impossible promises. We will not celebrate consumerism dressed up as self-care. We believe the radical choice is to slow down, listen to yourself, and eat on your own terms.</p>
+        <p class="manifesto-paragraph" data-i18n="manifestoP5">The app will always be free to use. There is a donation button for those who want to support, because while the world should be free, it isn’t. But McFatty’s will never profit from your guilt.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="close-manifesto" class="btn btn-primary" data-i18n="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+    <div class="modal">
+      <h3 id="legal-title"></h3>
+      <div class="modal-content" style="text-align: left;" id="legal-content"></div>
+      <div class="modal-actions">
+        <button id="close-legal" class="btn btn-primary" data-i18n="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-title">
+    <div class="modal">
+      <h3 id="instructions-title">Tile Functions</h3>
+      <div class="modal-content" style="text-align: left;">
+        <ul>
+          <li><strong>Logo:</strong> Click this tile to see these instructions again.</li>
+          <li><strong>Manifesto:</strong> Displays the app's philosophy on mindful eating.</li>
+          <li><strong>Welcome:</strong> A simple welcome message.</li>
+          <li><strong>Room to grow:</strong> A placeholder for future features like habits or reflections.</li>
+          <li><strong>Quick stats:</strong> Shows a summary of your food entries for the current day.</li>
+          <li><strong>Quick add:</strong> The main form for logging what you've eaten.</li>
+          <li><strong>Recent log:</strong> A table of your recent entries with search and filter options.</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button id="close-instructions" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
