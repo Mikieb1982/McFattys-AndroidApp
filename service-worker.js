@@ -1,9 +1,23 @@
 // Basic offline cache for the single page app
-const CACHE = 'mcfattys-v2';
+const CACHE = 'mcfattys-v3';
 const ASSETS = [
   './',
   './index.html',
-  './Logo.png',
+  './logo.png',
+  './css/themes.css',
+  './css/base.css',
+  './css/layout.css',
+  './css/tiles.css',
+  './js/main.js',
+  './js/tiles.js',
+  './js/tiles/logo.js',
+  './js/tiles/manifesto.js',
+  './js/tiles/welcome.js',
+  './js/tiles/growth.js',
+  './js/tiles/support.js',
+  './js/tiles/stats.js',
+  './js/tiles/quick-add.js',
+  './js/tiles/recent-log.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
